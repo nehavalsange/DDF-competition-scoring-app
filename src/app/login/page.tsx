@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Music, Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -30,13 +31,17 @@ function LoginForm() {
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-              <Music className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-white font-bold text-2xl">Munch</span>
+          <Link href="/" className="inline-block">
+            <Image
+              src="/manch-logo.png"
+              alt="MANCH 2026"
+              width={140}
+              height={140}
+              className="mx-auto drop-shadow-2xl"
+            />
           </Link>
-          <p className="text-white/50 mt-2 text-sm">Dance Competition Scoring System</p>
+          <p className="text-white font-bold text-lg mt-3">DDF Judging Platform</p>
+          <p className="text-white/50 text-sm">MANCH 2026 · Arizona Dance Festival</p>
         </div>
 
         <Card>

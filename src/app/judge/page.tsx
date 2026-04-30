@@ -1,23 +1,26 @@
 import { requireJudge } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SubmitFinalButton } from "@/components/SubmitFinalButton";
-import { Trophy, CheckCircle, Clock, Play, Edit3, Star } from "lucide-react";
+import { StarButton } from "@/components/StarButton";
+import { Trophy, CheckCircle, Clock, Play, Edit3, MapPin, Calendar } from "lucide-react";
 import { getCategoryLabel } from "@/types";
+import { formatDate } from "@/lib/utils";
+import Image from "next/image";
 
 export default async function JudgeDashboard() {
   const session = await requireJudge();
   const judgeId = session.judgeId!;
 
-  // Get judge's assigned competition(s)
   const assignments = await db.judgeAssignment.findMany({
     where: { judgeId },
     include: {
       competition: {
         include: {
+          // sorted by teamCode ascending — no category grouping
           teams: { orderBy: { teamCode: "asc" } },
         },
       },
@@ -34,19 +37,16 @@ export default async function JudgeDashboard() {
     );
   }
 
-  // Use first published competition
-  const activeAssignment = assignments.find((a) => a.competition.status === "PUBLISHED") || assignments[0];
+  const activeAssignment =
+    assignments.find((a) => a.competition.status === "PUBLISHED") || assignments[0];
   const competition = activeAssignment.competition;
-
   const teamIds = competition.teams.map((t) => t.id);
 
-  // Get progress for all teams
   const progress = await db.teamScoringProgress.findMany({
     where: { judgeId, teamId: { in: teamIds } },
   });
   const progressMap = new Map(progress.map((p) => [p.teamId, p.status]));
 
-  // Check if finalized
   const submission = await db.scoreSubmission.findUnique({
     where: { judgeId_competitionId: { judgeId, competitionId: competition.id } },
   });
@@ -64,113 +64,141 @@ export default async function JudgeDashboard() {
 
   return (
     <div>
-      {/* Welcome header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-1">
-          <Star className="w-5 h-5 text-violet-400" />
-          <h1 className="text-3xl font-bold text-white">Welcome, {session.name.split(" ")[0]}</h1>
+      {/* Welcome */}
+      <div className="flex items-center gap-3 mb-6">
+        <Image
+          src="/manch-logo.png"
+          alt="MANCH 2026"
+          width={56}
+          height={56}
+          className="rounded-xl"
+        />
+        <div>
+          <h1 className="text-2xl font-bold text-white">
+            Welcome, {session.name.split(" ")[0]}!
+          </h1>
+          <p className="text-white/40 text-sm">DDF MANCH 2026 Judging Panel</p>
         </div>
-        <p className="text-white/50">
-          {competition.name} — {competition.venue}
-        </p>
       </div>
 
-      {/* Progress banner */}
-      <Card className="mb-8">
-        <CardContent className="pt-5">
-          <div className="flex items-center justify-between mb-3">
+      {/* Competition info card */}
+      <Card className="mb-6 border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-purple-500/10">
+        <CardContent className="pt-5 pb-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <p className="text-white font-semibold">Scoring Progress</p>
-              <p className="text-white/40 text-sm">{completedCount} of {totalTeams} teams completed</p>
+              <p className="text-violet-300 text-xs font-semibold uppercase tracking-wider mb-1">
+                Active Competition
+              </p>
+              <h2 className="text-white font-bold text-lg">{competition.name}</h2>
+              <div className="flex flex-wrap gap-3 mt-2 text-white/50 text-sm">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" />
+                  {formatDate(competition.eventDate)}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                  {competition.venue}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Trophy className="w-3.5 h-3.5" />
+                  {totalTeams} teams
+                </span>
+              </div>
             </div>
-            <div className="text-right">
-              <p className="text-3xl font-bold text-white">{pct}%</p>
-              {isFinalized && <Badge variant="success" className="text-xs">Submitted</Badge>}
+            <div className="text-right flex-shrink-0">
+              <p className="text-4xl font-bold text-white">{pct}%</p>
+              <p className="text-white/40 text-xs">{completedCount}/{totalTeams} done</p>
             </div>
           </div>
-          <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-violet-500 to-purple-500 rounded-full transition-all duration-500"
-              style={{ width: `${pct}%` }}
-            />
+
+          {/* Progress bar */}
+          <div className="mt-4">
+            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-violet-500 to-purple-500 rounded-full transition-all duration-500"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
           </div>
+
+          {/* Submit button */}
           {!isFinalized && completedCount === totalTeams && totalTeams > 0 && (
             <div className="mt-4">
               <SubmitFinalButton competitionId={competition.id} />
             </div>
           )}
+          {isFinalized && (
+            <div className="mt-3 flex items-center gap-2 text-emerald-400 text-sm">
+              <CheckCircle className="w-4 h-4" />
+              Scores submitted — thank you!
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {isFinalized ? (
-        <div className="text-center py-12 glass rounded-3xl">
-          <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-          <h2 className="text-white font-bold text-xl mb-2">Scores Submitted!</h2>
-          <p className="text-white/50">Your scores have been submitted. Thank you for judging.</p>
-        </div>
-      ) : competition.status !== "PUBLISHED" ? (
+      {/* Team list or status messages */}
+      {competition.status !== "PUBLISHED" && !isFinalized ? (
         <div className="text-center py-12 glass rounded-3xl">
           <Clock className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <h2 className="text-white/60 font-semibold text-lg mb-2">Competition not yet published</h2>
+          <h2 className="text-white/60 font-semibold text-lg mb-2">Competition not yet open</h2>
           <p className="text-white/30 text-sm">Scoring will open once the admin publishes the competition.</p>
         </div>
       ) : (
         <>
-          <h2 className="text-lg font-semibold text-white mb-4">Teams</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-white">All Teams</h2>
+            <span className="text-white/30 text-xs">Sorted by team code · ⭐ = revisit later</span>
+          </div>
 
-          {/* Group by category */}
-          {(["JR_KIDS", "SR_KIDS", "ADULT"] as const).map((cat) => {
-            const catTeams = competition.teams.filter((t) => t.category === cat);
-            if (catTeams.length === 0) return null;
+          <div className="space-y-2">
+            {competition.teams.map((team) => {
+              const status = progressMap.get(team.id) ?? "NOT_STARTED";
+              const { label, variant, icon: Icon } = statusConfig[status];
 
-            return (
-              <div key={cat} className="mb-8">
-                <h3 className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2">
-                  {getCategoryLabel(cat)}
-                  <span className="text-white/20">({catTeams.length})</span>
-                </h3>
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {catTeams.map((team) => {
-                    const status = progressMap.get(team.id) ?? "NOT_STARTED";
-                    const { label, variant, icon: Icon } = statusConfig[status];
+              return (
+                <div key={team.id} className="flex items-center gap-2">
+                  {/* Star button — outside the link so clicks don't navigate */}
+                  <StarButton teamId={team.id} />
 
-                    return (
-                      <Link key={team.id} href={`/judge/team/${team.id}`}>
-                        <Card className="hover:bg-white/10 transition-all cursor-pointer hover:-translate-y-0.5 duration-200">
-                          <CardContent className="pt-4 pb-4">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <span className="text-violet-300 font-mono text-sm font-medium">
-                                    {team.teamCode}
-                                  </span>
-                                  <Badge variant={variant} className="text-xs">
-                                    <Icon className="w-3 h-3 mr-1" />
-                                    {label}
-                                  </Badge>
-                                </div>
-                                <p className="text-white font-medium truncate">{team.teamName}</p>
-                                {team.description && (
-                                  <p className="text-white/30 text-xs mt-0.5 line-clamp-1">{team.description}</p>
-                                )}
-                              </div>
-                              <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
-                                {status === "COMPLETED" ? (
-                                  <Edit3 className="w-4 h-4 text-emerald-400" />
-                                ) : (
-                                  <Play className="w-4 h-4 text-violet-400" />
-                                )}
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </Link>
-                    );
-                  })}
+                  <Link href={`/judge/team/${team.id}`} className="flex-1">
+                    <Card className="hover:bg-white/10 transition-all cursor-pointer hover:-translate-y-0.5 duration-200">
+                      <CardContent className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          {/* Team code */}
+                          <span className="text-violet-300 font-mono text-sm font-bold w-20 flex-shrink-0">
+                            {team.teamCode}
+                          </span>
+
+                          {/* Name + category */}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white font-medium truncate">{team.teamName}</p>
+                            <p className="text-white/30 text-xs">
+                              {getCategoryLabel(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT")}
+                            </p>
+                          </div>
+
+                          {/* Status badge */}
+                          <Badge variant={variant} className="text-xs flex-shrink-0">
+                            <Icon className="w-3 h-3 mr-1" />
+                            {label}
+                          </Badge>
+
+                          {/* Action icon */}
+                          <div className="flex-shrink-0 text-white/30">
+                            {status === "COMPLETED" ? (
+                              <Edit3 className="w-4 h-4 text-emerald-400" />
+                            ) : (
+                              <Play className="w-4 h-4 text-violet-400" />
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </>
       )}
     </div>

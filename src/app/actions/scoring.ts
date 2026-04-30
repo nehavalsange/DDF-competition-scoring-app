@@ -86,5 +86,5 @@ export async function submitFinalScores(competitionId: string) {
   });
 
   revalidatePath("/judge");
-  redirect("/login");
+  redirect("/judge");
 }

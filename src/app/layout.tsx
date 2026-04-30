@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Munch Dance Competition | Scoring System",
-  description: "Professional dance competition scoring system for judges and administrators.",
+  title: "DDF | MANCH 2026 Judging Platform",
+  description: "Official judging platform for MANCH 2026 - Arizona Dance Festival by Desi Dance & Fitness.",
 };
 
 export default function RootLayout({

@@ -1,7 +1,7 @@
 import { requireJudge } from "@/lib/auth";
 import { logout } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
-import { Music, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 
 export default async function JudgeLayout({ children }: { children: React.ReactNode }) {
@@ -17,10 +17,10 @@ export default async function JudgeLayout({ children }: { children: React.ReactN
       <nav className="sticky top-0 z-50 glass border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/judge" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-              <Music className="w-3.5 h-3.5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+              <span className="text-white font-black text-xs tracking-tight">DDF</span>
             </div>
-            <span className="text-white font-bold hidden sm:block">Munch Scoring</span>
+            <span className="text-white font-bold hidden sm:block">DDF Judging</span>
           </Link>
 
           <div className="flex items-center gap-3">
