@@ -32,15 +32,17 @@ function LoginForm() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <Image
-              src="/manch-logo.png"
-              alt="MANCH 2026"
-              width={140}
-              height={140}
-              className="mx-auto drop-shadow-2xl"
-            />
+            <div className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden mx-auto shadow-2xl shadow-amber-500/30 ring-4 ring-amber-400/20">
+              <Image
+                src="/manch-logo.png"
+                alt="MANCH 2026"
+                width={144}
+                height={144}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </Link>
-          <p className="text-white font-bold text-lg mt-3">DDF Judging Platform</p>
+          <p className="text-white font-bold text-lg mt-4">DDF Judging Platform</p>
           <p className="text-white/50 text-sm">MANCH 2026 · Arizona Dance Festival</p>
         </div>
 
@@ -89,7 +91,7 @@ function LoginForm() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" size="lg" disabled={isPending}>
+              <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-bold hover:from-amber-400 hover:to-yellow-400" size="lg" disabled={isPending}>
                 {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                 {isPending ? "Signing in..." : "Sign In"}
               </Button>
@@ -100,7 +102,7 @@ function LoginForm() {
                 href="/login?role=judge"
                 className={`flex-1 text-center text-xs py-2 rounded-lg border transition-colors ${
                   isJudge
-                    ? "border-violet-500/50 bg-violet-500/10 text-violet-300"
+                    ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
                     : "border-white/10 text-white/40 hover:text-white/60"
                 }`}
               >
@@ -110,7 +112,7 @@ function LoginForm() {
                 href="/login?role=admin"
                 className={`flex-1 text-center text-xs py-2 rounded-lg border transition-colors ${
                   isAdmin
-                    ? "border-violet-500/50 bg-violet-500/10 text-violet-300"
+                    ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
                     : "border-white/10 text-white/40 hover:text-white/60"
                 }`}
               >
