@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  JUDGE
+}
+
+enum CompetitionStatus {
+  DRAFT
+  PUBLISHED
+  COMPLETED
+}
+
+enum TeamCategory {
+  JR_KIDS
+  SR_KIDS
+  ADULT
+}
+
+enum ScoreStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  judge            Judge?
+  judgeAssignments JudgeAssignment[]
+  scoreSubmissions ScoreSubmission[]
+}
+
+model Competition {
+  id          String            @id @default(cuid())
+  name        String
+  eventDate   DateTime
+  venue       String
+  description String?
+  status      CompetitionStatus @default(DRAFT)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  teams            Team[]
+  judgeAssignments JudgeAssignment[]
+}
+
+model Team {
+  id            String       @id @default(cuid())
+  competitionId String
+  teamCode      String
+  teamName      String
+  category      TeamCategory
+  description   String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  competition  Competition           @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  scores       Score[]
+  teamProgress TeamScoringProgress[]
+
+  @@unique([competitionId, teamCode])
+}
+
+model Judge {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scores           Score[]
+  judgeAssignments JudgeAssignment[]
+  scoreSubmissions ScoreSubmission[]
+  teamProgress     TeamScoringProgress[]
+}
+
+model Score {
+  id           String   @id @default(cuid())
+  judgeId      String
+  teamId       String
+  categoryName String
+  score        Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  judge Judge @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  team  Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([judgeId, teamId, categoryName])
+}
+
+model JudgeAssignment {
+  id            String   @id @default(cuid())
+  judgeId       String
+  competitionId String
+  userId        String
+  createdAt     DateTime @default(now())
+
+  judge       Judge       @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([judgeId, competitionId])
+}
+
+model TeamScoringProgress {
+  id        String      @id @default(cuid())
+  judgeId   String
+  teamId    String
+  status    ScoreStatus @default(NOT_STARTED)
+  updatedAt DateTime    @updatedAt
+
+  judge Judge @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  team  Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([judgeId, teamId])
+}
+
+model ScoreSubmission {
+  id            String   @id @default(cuid())
+  judgeId       String
+  userId        String
+  competitionId String
+  submittedAt   DateTime @default(now())
+  isFinalized   Boolean  @default(true)
+
+  judge Judge @relation(fields: [judgeId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([judgeId, competitionId])
+}
