@@ -100,7 +100,7 @@ export function ScoringForm({
                         onClick={() => setScores((prev) => ({ ...prev, [category]: val }))}
                         className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm transition-all duration-150 ${
                           current >= val
-                            ? "bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-md shadow-violet-500/30 scale-105"
+                            ? "bg-gradient-to-br from-fuchsia-500 to-purple-700 text-white shadow-md shadow-fuchsia-500/30 scale-105"
                             : "bg-white/5 text-white/30 hover:bg-white/15 hover:text-white/60"
                         }`}
                       >

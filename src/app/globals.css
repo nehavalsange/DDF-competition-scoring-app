@@ -6,7 +6,7 @@
 }
 
 :root {
-  --background: #0d0d1a;
+  --background: #0e0618;
   --foreground: #ffffff;
 }
 
@@ -45,7 +45,7 @@ body {
   background: rgba(255,255,255,0.05);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(251, 191, 36, 0.4);
+  background: rgba(217, 70, 239, 0.4);
   border-radius: 3px;
 }
 

@@ -99,7 +99,7 @@ export default async function CompetitionDetailPage({
       {competition.judgeAssignments.length > 0 && (
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-            <Users className="w-5 h-5 text-violet-400" />
+            <Users className="w-5 h-5 text-fuchsia-400" />
             Judge Progress
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -138,7 +138,7 @@ export default async function CompetitionDetailPage({
                     </div>
                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-violet-500 to-purple-500 rounded-full transition-all"
+                        className="h-full bg-gradient-to-r from-fuchsia-500 to-purple-600 rounded-full transition-all"
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -161,7 +161,7 @@ export default async function CompetitionDetailPage({
         {/* Teams */}
         <div className="lg:col-span-2 space-y-6">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-violet-400" />
+            <Trophy className="w-5 h-5 text-fuchsia-400" />
             Teams ({totalTeams})
           </h2>
 
@@ -185,7 +185,7 @@ export default async function CompetitionDetailPage({
                       <div key={team.id} className="glass rounded-xl px-4 py-3 flex items-center gap-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-violet-300 text-sm font-mono font-medium">
+                            <span className="text-fuchsia-300 text-sm font-mono font-medium">
                               {team.teamCode}
                             </span>
                             <span className="text-white text-sm">{team.teamName}</span>
@@ -211,7 +211,7 @@ export default async function CompetitionDetailPage({
           <Card>
             <CardHeader>
               <CardTitle className="text-sm flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-violet-400" /> Add Team
+                <Trophy className="w-4 h-4 text-fuchsia-400" /> Add Team
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -222,7 +222,7 @@ export default async function CompetitionDetailPage({
           <Card>
             <CardHeader>
               <CardTitle className="text-sm flex items-center gap-2">
-                <Users className="w-4 h-4 text-violet-400" /> Add Judge
+                <Users className="w-4 h-4 text-fuchsia-400" /> Add Judge
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -238,7 +238,7 @@ export default async function CompetitionDetailPage({
               <CardContent className="space-y-2">
                 {competition.judgeAssignments.map((a) => (
                   <div key={a.id} className="flex items-center gap-2 text-sm">
-                    <div className="w-7 h-7 rounded-full bg-violet-500/20 flex items-center justify-center text-violet-300 text-xs font-semibold">
+                    <div className="w-7 h-7 rounded-full bg-fuchsia-500/20 flex items-center justify-center text-fuchsia-300 text-xs font-semibold">
                       {a.user.name[0]}
                     </div>
                     <div>

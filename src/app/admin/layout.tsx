@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div className="min-h-screen">
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-purple-600/10 blur-3xl" />
-        <div className="absolute top-1/2 -right-40 w-96 h-96 rounded-full bg-violet-600/10 blur-3xl" />
+        <div className="absolute top-1/2 -right-40 w-96 h-96 rounded-full bg-fuchsia-600/10 blur-3xl" />
       </div>
 
       <nav className="sticky top-0 z-50 glass border-b border-amber-400/15">

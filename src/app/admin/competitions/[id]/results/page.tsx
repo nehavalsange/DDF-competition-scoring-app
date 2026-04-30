@@ -167,7 +167,7 @@ export default async function ResultsPage({
         /* ── Per-judge view ── */
         <div className="space-y-8">
           <div className="glass rounded-2xl px-5 py-3 flex items-center gap-3">
-            <Users className="w-5 h-5 text-violet-400" />
+            <Users className="w-5 h-5 text-fuchsia-400" />
             <div>
               <p className="text-white font-semibold">{selectedAssignment.user.name}</p>
               <p className="text-white/40 text-sm">@{selectedAssignment.user.username}</p>
@@ -217,7 +217,7 @@ export default async function ResultsPage({
                           <tr
                             key={row.teamCode}
                             className={`border-b border-white/5 ${
-                              i === 0 && row.total > 0 ? "bg-violet-500/10" : ""
+                              i === 0 && row.total > 0 ? "bg-fuchsia-500/10" : ""
                             }`}
                           >
                             <td className="py-2 px-3">
@@ -250,7 +250,7 @@ export default async function ResultsPage({
         /* ── Overall combined view ── */
         <div className="space-y-8">
           <div className="glass rounded-2xl px-5 py-3 flex items-center gap-2 text-white/60 text-sm">
-            <Star className="w-4 h-4 text-violet-400" />
+            <Star className="w-4 h-4 text-fuchsia-400" />
             Combined results from all judges (average scores)
           </div>
           <div className="grid md:grid-cols-3 gap-6">

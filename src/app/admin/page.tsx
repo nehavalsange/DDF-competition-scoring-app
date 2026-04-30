@@ -55,7 +55,7 @@ export default async function AdminDashboard() {
             const { label, variant } = statusConfig[comp.status];
             return (
               <Link key={comp.id} href={`/admin/competitions/${comp.id}`}>
-                <Card className="hover:bg-white/10 transition-all duration-200 hover:shadow-2xl hover:shadow-violet-500/10 hover:-translate-y-0.5 cursor-pointer h-full">
+                <Card className="hover:bg-white/10 transition-all duration-200 hover:shadow-2xl hover:shadow-fuchsia-500/10 hover:-translate-y-0.5 cursor-pointer h-full">
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-base leading-snug">{comp.name}</CardTitle>
@@ -73,15 +73,15 @@ export default async function AdminDashboard() {
                     </div>
                     <div className="flex gap-4 text-sm">
                       <div className="flex items-center gap-1.5 text-white/60">
-                        <Trophy className="w-3.5 h-3.5 text-violet-400" />
+                        <Trophy className="w-3.5 h-3.5 text-fuchsia-400" />
                         <span>{comp._count.teams} teams</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-white/60">
-                        <Users className="w-3.5 h-3.5 text-violet-400" />
+                        <Users className="w-3.5 h-3.5 text-fuchsia-400" />
                         <span>{comp._count.judgeAssignments} judges</span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-end mt-4 text-violet-400 text-sm font-medium">
+                    <div className="flex items-center justify-end mt-4 text-fuchsia-400 text-sm font-medium">
                       View details <ArrowRight className="w-3.5 h-3.5 ml-1" />
                     </div>
                   </CardContent>
