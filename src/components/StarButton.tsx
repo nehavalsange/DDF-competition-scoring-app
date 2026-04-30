@@ -3,39 +3,41 @@
 import { useState, useEffect } from "react";
 import { Star } from "lucide-react";
 
-const STORAGE_KEY = "ddf_starred_teams";
+function storageKey(judgeId: string) {
+  return `ddf_starred_${judgeId}`;
+}
 
-function getStarred(): Set<string> {
+function getStarred(judgeId: string): Set<string> {
   if (typeof window === "undefined") return new Set();
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(storageKey(judgeId));
     return new Set(raw ? JSON.parse(raw) : []);
   } catch {
     return new Set();
   }
 }
 
-function saveStarred(starred: Set<string>) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify([...starred]));
+function saveStarred(judgeId: string, starred: Set<string>) {
+  localStorage.setItem(storageKey(judgeId), JSON.stringify([...starred]));
 }
 
-export function StarButton({ teamId }: { teamId: string }) {
+export function StarButton({ teamId, judgeId }: { teamId: string; judgeId: string }) {
   const [starred, setStarred] = useState(false);
 
   useEffect(() => {
-    setStarred(getStarred().has(teamId));
-  }, [teamId]);
+    setStarred(getStarred(judgeId).has(teamId));
+  }, [teamId, judgeId]);
 
   const toggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const current = getStarred();
+    const current = getStarred(judgeId);
     if (current.has(teamId)) {
       current.delete(teamId);
     } else {
       current.add(teamId);
     }
-    saveStarred(current);
+    saveStarred(judgeId, current);
     setStarred(current.has(teamId));
   };
 

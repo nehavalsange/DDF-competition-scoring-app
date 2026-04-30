@@ -221,7 +221,7 @@ export default async function ResultsPage({
                             }`}
                           >
                             <td className="py-2 px-3">
-                              <span className="text-violet-300 font-mono text-xs mr-2">
+                              <span className="text-amber-300 font-mono text-xs mr-2">
                                 {row.teamCode}
                               </span>
                               <span className="text-white/70">{row.teamName}</span>
@@ -299,7 +299,7 @@ function WinnersCard({
                   {r.winners.map((w) => (
                     <div key={w.teamCode} className="flex items-center gap-2">
                       <Trophy className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                      <span className="text-violet-300 font-mono text-xs">{w.teamCode}</span>
+                      <span className="text-amber-300 font-mono text-xs">{w.teamCode}</span>
                       <span className="text-white text-sm">{w.teamName}</span>
                     </div>
                   ))}

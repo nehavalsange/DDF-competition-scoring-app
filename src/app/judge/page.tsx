@@ -82,11 +82,11 @@ export default async function JudgeDashboard() {
       </div>
 
       {/* Competition info card */}
-      <Card className="mb-6 border-violet-500/30 bg-gradient-to-br from-violet-500/10 to-purple-500/10">
+      <Card className="mb-6 border-amber-400/25 bg-gradient-to-br from-amber-400/8 to-purple-900/20">
         <CardContent className="pt-5 pb-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <p className="text-violet-300 text-xs font-semibold uppercase tracking-wider mb-1">
+              <p className="text-amber-300 text-xs font-semibold uppercase tracking-wider mb-1">
                 Active Competition
               </p>
               <h2 className="text-white font-bold text-lg">{competition.name}</h2>
@@ -115,7 +115,7 @@ export default async function JudgeDashboard() {
           <div className="mt-4">
             <div className="h-2 bg-white/10 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-violet-500 to-purple-500 rounded-full transition-all duration-500"
+                className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-500"
                 style={{ width: `${pct}%` }}
               />
             </div>
@@ -158,14 +158,14 @@ export default async function JudgeDashboard() {
               return (
                 <div key={team.id} className="flex items-center gap-2">
                   {/* Star button — outside the link so clicks don't navigate */}
-                  <StarButton teamId={team.id} />
+                  <StarButton teamId={team.id} judgeId={judgeId} />
 
                   <Link href={`/judge/team/${team.id}`} className="flex-1">
                     <Card className="hover:bg-white/10 transition-all cursor-pointer hover:-translate-y-0.5 duration-200">
                       <CardContent className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           {/* Team code */}
-                          <span className="text-violet-300 font-mono text-sm font-bold w-20 flex-shrink-0">
+                          <span className="text-amber-300 font-mono text-sm font-bold w-20 flex-shrink-0">
                             {team.teamCode}
                           </span>
 
@@ -188,7 +188,7 @@ export default async function JudgeDashboard() {
                             {status === "COMPLETED" ? (
                               <Edit3 className="w-4 h-4 text-emerald-400" />
                             ) : (
-                              <Play className="w-4 h-4 text-violet-400" />
+                              <Play className="w-4 h-4 text-amber-400" />
                             )}
                           </div>
                         </div>

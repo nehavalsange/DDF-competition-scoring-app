@@ -73,7 +73,7 @@ export default async function TeamScoringPage({
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-violet-300 font-mono font-medium">{team.teamCode}</span>
+                <span className="text-amber-300 font-mono font-medium">{team.teamCode}</span>
                 <Badge variant="default">
                   {getCategoryLabel(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT")}
                 </Badge>
