@@ -3,6 +3,7 @@ import { logout } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default async function JudgeLayout({ children }: { children: React.ReactNode }) {
   const session = await requireJudge();
@@ -37,6 +38,18 @@ export default async function JudgeLayout({ children }: { children: React.ReactN
           </div>
         </div>
       </nav>
+
+      {/* Horizontal banner — full width rectangular strip */}
+      <div className="relative w-full h-40 md:h-52 overflow-hidden">
+        <Image
+          src="/manch-bg.png"
+          alt="MANCH 2026"
+          fill
+          className="object-cover object-center"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
+      </div>
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
         {children}
