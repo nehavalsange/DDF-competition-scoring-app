@@ -9,6 +9,7 @@ import { AddTeamForm } from "@/components/AddTeamForm";
 import { AddJudgeForm } from "@/components/AddJudgeForm";
 import { PublishButton } from "@/components/PublishButton";
 import { DeleteTeamButton } from "@/components/DeleteTeamButton";
+import { EditTeamButton } from "@/components/EditTeamButton";
 import { DeleteCompetitionButton } from "@/components/DeleteCompetitionButton";
 import { ResetScoresButton } from "@/components/ResetScoresButton";
 import { formatDate } from "@/lib/utils";
@@ -60,6 +61,7 @@ export default async function CompetitionDetailPage({
     JR_KIDS: competition.teams.filter((t) => t.category === "JR_KIDS"),
     SR_KIDS: competition.teams.filter((t) => t.category === "SR_KIDS"),
     ADULT: competition.teams.filter((t) => t.category === "ADULT"),
+    SINGING: competition.teams.filter((t) => t.category === "SINGING"),
   };
 
   return (
@@ -200,7 +202,19 @@ export default async function CompetitionDetailPage({
                             </p>
                           )}
                         </div>
-                        <DeleteTeamButton teamId={team.id} competitionId={id} />
+                        <div className="flex items-center gap-1">
+                          <EditTeamButton
+                            teamId={team.id}
+                            competitionId={id}
+                            initialData={{
+                              teamCode: team.teamCode,
+                              teamName: team.teamName,
+                              category: team.category,
+                              description: team.description ?? "",
+                            }}
+                          />
+                          <DeleteTeamButton teamId={team.id} competitionId={id} />
+                        </div>
                       </div>
                     ))}
                   </div>

@@ -46,6 +46,7 @@ export function AddTeamForm({ competitionId }: { competitionId: string }) {
             <SelectItem value="JR_KIDS">Jr Kids</SelectItem>
             <SelectItem value="SR_KIDS">Sr Kids</SelectItem>
             <SelectItem value="ADULT">Adult</SelectItem>
+            <SelectItem value="SINGING">Singing</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -22,6 +22,7 @@ enum TeamCategory {
   JR_KIDS
   SR_KIDS
   ADULT
+  SINGING
 }
 
 enum ScoreStatus {

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
 import { getScoringCategories, getCategoryLabel } from "@/types";
 import { ScoringForm } from "@/components/ScoringForm";
+import { SingingTeamComplete } from "@/components/SingingTeamComplete";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,8 @@ export default async function TeamScoringPage({
     where: { judgeId_teamId: { judgeId, teamId } },
   });
 
-  const categories = getScoringCategories(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT");
+  const isSinging = team.category === "SINGING";
+  const categories = isSinging ? [] : getScoringCategories(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT");
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -75,7 +77,7 @@ export default async function TeamScoringPage({
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-amber-300 font-mono font-medium">{team.teamCode}</span>
                 <Badge variant="default">
-                  {getCategoryLabel(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT")}
+                  {getCategoryLabel(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT" | "SINGING")}
                 </Badge>
               </div>
               <h2 className="text-white font-semibold text-lg">{team.teamName}</h2>
@@ -90,7 +92,12 @@ export default async function TeamScoringPage({
         </CardContent>
       </Card>
 
-      {isFinalized ? (
+      {isSinging ? (
+        <SingingTeamComplete
+          teamId={teamId}
+          currentStatus={progress?.status ?? "NOT_STARTED"}
+        />
+      ) : isFinalized ? (
         <div className="glass rounded-2xl p-8 text-center">
           <p className="text-white/60">Scores have been finalized. You cannot edit them.</p>
           <Link href="/judge" className="mt-4 inline-block">

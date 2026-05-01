@@ -46,7 +46,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       </nav>
 
       {/* MANCH 2026 stage banner */}
-      <div className="relative h-28 md:h-40 overflow-hidden">
+      <div className="relative h-40 md:h-52 overflow-hidden">
         <Image
           src="/manch-bg.png"
           alt="MANCH 2026 Stage"

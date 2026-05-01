@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { TeamCategory } from "@/types";
+import { TeamCategory as PrismaTeamCategory } from "@/generated/prisma";
 
 export async function createCompetition(
   _prev: { error?: string; success?: boolean } | null,
@@ -65,6 +66,29 @@ export async function deleteTeam(teamId: string, competitionId: string) {
   await requireAdmin();
   await db.team.delete({ where: { id: teamId } });
   revalidatePath(`/admin/competitions/${competitionId}`);
+}
+
+export async function updateTeam(
+  teamId: string,
+  competitionId: string,
+  data: { teamCode: string; teamName: string; category: PrismaTeamCategory; description: string }
+) {
+  await requireAdmin();
+  try {
+    await db.team.update({
+      where: { id: teamId },
+      data: {
+        teamCode: data.teamCode,
+        teamName: data.teamName,
+        category: data.category,
+        description: data.description || null,
+      },
+    });
+  } catch {
+    return { error: "Team code must be unique within this competition." };
+  }
+  revalidatePath(`/admin/competitions/${competitionId}`);
+  return { success: true };
 }
 
 export async function addJudge(

@@ -57,6 +57,20 @@ export async function saveScores(
   return { success: true };
 }
 
+export async function markTeamAttended(teamId: string) {
+  const session = await requireJudge();
+  const judgeId = session.judgeId!;
+
+  await db.teamScoringProgress.upsert({
+    where: { judgeId_teamId: { judgeId, teamId } },
+    update: { status: "COMPLETED" },
+    create: { judgeId, teamId, status: "COMPLETED" },
+  });
+
+  revalidatePath(`/judge/team/${teamId}`);
+  revalidatePath("/judge");
+}
+
 export async function submitFinalScores(competitionId: string) {
   const session = await requireJudge();
   const judgeId = session.judgeId!;

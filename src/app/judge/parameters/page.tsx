@@ -102,61 +102,59 @@ const CATEGORIES: Category[] = [
 ];
 
 function CategoryCard({ cat }: { cat: Category }) {
-  const [openCriterion, setOpenCriterion] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const isFuchsia = cat.color === "fuchsia";
 
   return (
-    <div className="mb-6">
-      {/* Header */}
-      <div className={`rounded-xl border px-4 py-4 mb-3 ${isFuchsia ? "border-fuchsia-500/25 bg-fuchsia-500/8" : "border-amber-400/25 bg-amber-400/8"}`}>
-        <div className="flex items-start gap-3">
-          <span className={`text-2xl font-black leading-none mt-0.5 ${isFuchsia ? "text-fuchsia-400" : "text-amber-400"}`}>
+    <div className="mb-3">
+      <button
+        className={`w-full text-left rounded-xl border px-4 py-3.5 transition-all duration-200 ${
+          isOpen
+            ? isFuchsia
+              ? "border-fuchsia-500/40 bg-fuchsia-500/12"
+              : "border-amber-400/40 bg-amber-400/12"
+            : "border-white/10 bg-white/4 hover:bg-white/7"
+        }`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="flex items-center gap-3">
+          <span className={`text-xl font-black leading-none flex-shrink-0 ${isFuchsia ? "text-fuchsia-400" : "text-amber-400"}`}>
             {cat.number}.
           </span>
-          <div>
-            <h3 className="text-white font-bold text-base leading-snug">{cat.title}</h3>
-            <p className={`text-xs font-semibold uppercase tracking-wider mt-1 ${isFuchsia ? "text-fuchsia-400" : "text-amber-400"}`}>
-              Description
-            </p>
-            <p className="text-white/55 text-sm mt-1 leading-relaxed">{cat.description}</p>
-            <p className={`text-xs font-semibold uppercase tracking-wider mt-3 ${isFuchsia ? "text-fuchsia-400" : "text-amber-400"}`}>
-              Judging Parameters
-            </p>
-          </div>
+          <span className="text-white font-semibold text-sm flex-1 text-left leading-snug">
+            {cat.title}
+          </span>
+          <ChevronDown
+            className={`w-4 h-4 flex-shrink-0 text-white/30 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
         </div>
-      </div>
+      </button>
 
-      {/* Expandable criteria */}
-      <div className="space-y-1.5 pl-2">
-        {cat.criteria.map((c) => {
-          const isOpen = openCriterion === c.name;
-          return (
-            <div
-              key={c.name}
-              className={`rounded-xl border transition-all duration-200 overflow-hidden ${
-                isOpen ? "border-white/20 bg-white/8" : "border-white/8 bg-white/3 hover:bg-white/6"
-              }`}
-            >
-              <button
-                className="w-full flex items-center justify-between px-4 py-2.5 text-left gap-3"
-                onClick={() => setOpenCriterion(isOpen ? null : c.name)}
-              >
-                <span className={`font-medium text-sm ${isOpen ? (isFuchsia ? "text-fuchsia-300" : "text-amber-300") : "text-white/75"}`}>
-                  {c.name}
-                </span>
-                <ChevronDown
-                  className={`w-4 h-4 flex-shrink-0 text-white/30 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-              {isOpen && (
-                <p className="px-4 pb-3 text-white/55 text-sm leading-relaxed border-t border-white/8 pt-2.5">
-                  {c.desc}
-                </p>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      {isOpen && (
+        <div className={`mt-1.5 rounded-xl border px-4 py-4 ${
+          isFuchsia ? "border-fuchsia-500/20 bg-fuchsia-500/6" : "border-amber-400/20 bg-amber-400/6"
+        }`}>
+          <p className={`text-xs font-semibold uppercase tracking-wider mb-1.5 ${isFuchsia ? "text-fuchsia-400" : "text-amber-400"}`}>
+            Description
+          </p>
+          <p className="text-white/60 text-sm leading-relaxed mb-4">{cat.description}</p>
+
+          <p className={`text-xs font-semibold uppercase tracking-wider mb-2.5 ${isFuchsia ? "text-fuchsia-400" : "text-amber-400"}`}>
+            Judging Parameters
+          </p>
+          <ul className="space-y-2.5">
+            {cat.criteria.map((c) => (
+              <li key={c.name} className="flex gap-2.5">
+                <span className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${isFuchsia ? "bg-fuchsia-400" : "bg-amber-400"}`} />
+                <div>
+                  <span className="text-white text-sm font-medium">{c.name}</span>
+                  <span className="text-white/50 text-sm"> — {c.desc}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
@@ -170,7 +168,7 @@ export default function JudgingParametersPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-white">Judging Parameters</h1>
-          <p className="text-white/40 text-sm">MANCH 2026 · Tap any parameter to expand</p>
+          <p className="text-white/40 text-sm">MANCH 2026 · Tap any category to expand</p>
         </div>
       </div>
 
