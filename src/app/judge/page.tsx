@@ -64,6 +64,18 @@ export default async function JudgeDashboard() {
 
   return (
     <div>
+      {/* Full MANCH 2026 banner — complete image, no cropping */}
+      <div className="w-full mb-6 rounded-2xl overflow-hidden shadow-xl shadow-black/40">
+        <Image
+          src="/manch-bg.png"
+          alt="MANCH 2026 Arizona Dance Festival"
+          width={1920}
+          height={640}
+          className="w-full h-auto"
+          priority
+        />
+      </div>
+
       {/* Welcome */}
       <div className="flex items-center gap-3 mb-6">
         <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-amber-400/20">

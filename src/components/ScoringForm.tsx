@@ -3,9 +3,8 @@
 import { useActionState, useState, useEffect, useRef } from "react";
 import { saveScores } from "@/app/actions/scoring";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Save, CheckCircle, Loader2, Star } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { AlertCircle, Save, CheckCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface ScoringFormProps {
@@ -27,21 +26,29 @@ export function ScoringForm({
   const [state, action, isPending] = useActionState(saveScores, null);
   const [markComplete, setMarkComplete] = useState(currentStatus === "COMPLETED");
   const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout>>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  const allScored = categories.every((c) => scores[c] >= 1);
+  // Only true after the judge actually touches a score button in this session.
+  // Prevents auto-save firing on mount when existing scores are pre-filled.
+  const hasUserInteracted = useRef(false);
 
-  // Autosave after 3s of inactivity
+  // Only true when the judge explicitly clicks "Mark Complete".
+  // Prevents auto-save redirect (auto-save should never navigate away).
+  const shouldRedirect = useRef(false);
+
+  const allScored = categories.every((c) => (scores[c] ?? 0) >= 1);
+
+  // Auto-save 3s after the last score change — only if judge has interacted this session
   useEffect(() => {
-    if (Object.keys(scores).length === 0) return;
+    if (!hasUserInteracted.current) return;
     if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     autoSaveTimer.current = setTimeout(() => {
       if (allScored) {
         setAutoSaveStatus("saving");
         formRef.current?.requestSubmit();
-        setTimeout(() => setAutoSaveStatus("saved"), 1000);
       }
     }, 3000);
     return () => {
@@ -49,14 +56,22 @@ export function ScoringForm({
     };
   }, [scores, allScored]);
 
+  // After a successful save: update UI and only navigate if judge explicitly marked complete
   useEffect(() => {
     if (state?.success) {
       setAutoSaveStatus("saved");
-      if (markComplete) {
+      if (shouldRedirect.current) {
+        shouldRedirect.current = false;
         router.push("/judge");
       }
     }
-  }, [state, markComplete, router]);
+  }, [state, router]);
+
+  const handleScoreChange = (category: string, val: number) => {
+    hasUserInteracted.current = true;
+    setScores((prev) => ({ ...prev, [category]: val }));
+    setAutoSaveStatus("idle");
+  };
 
   const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
 
@@ -65,12 +80,12 @@ export function ScoringForm({
       <input type="hidden" name="teamId" value={teamId} />
       <input type="hidden" name="markComplete" value={markComplete.toString()} />
 
-      {/* Autosave status */}
+      {/* Status bar */}
       <div className="flex items-center justify-between text-xs text-white/40">
-        <span>Tap a star to score each category (1–5)</span>
+        <span>Tap a number to score each category (1–5)</span>
         {autoSaveStatus === "saving" && (
           <span className="flex items-center gap-1 text-amber-400">
-            <Loader2 className="w-3 h-3 animate-spin" /> Saving...
+            <Loader2 className="w-3 h-3 animate-spin" /> Saving…
           </span>
         )}
         {autoSaveStatus === "saved" && (
@@ -97,7 +112,7 @@ export function ScoringForm({
                       <button
                         key={val}
                         type="button"
-                        onClick={() => setScores((prev) => ({ ...prev, [category]: val }))}
+                        onClick={() => handleScoreChange(category, val)}
                         className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm transition-all duration-150 ${
                           current >= val
                             ? "bg-gradient-to-br from-fuchsia-500 to-purple-700 text-white shadow-md shadow-fuchsia-500/30 scale-105"
@@ -109,13 +124,8 @@ export function ScoringForm({
                     ))}
                   </div>
                 </div>
-                {/* Hidden input for form submission */}
                 {current > 0 && (
-                  <input
-                    type="hidden"
-                    name={`score_${category}`}
-                    value={current}
-                  />
+                  <input type="hidden" name={`score_${category}`} value={current} />
                 )}
               </CardContent>
             </Card>
@@ -123,7 +133,7 @@ export function ScoringForm({
         })}
       </div>
 
-      {/* Total & validation */}
+      {/* Total */}
       {Object.keys(scores).length > 0 && (
         <div className="glass rounded-xl px-4 py-3 flex items-center justify-between">
           <span className="text-white/50 text-sm">Total Score</span>
@@ -151,7 +161,10 @@ export function ScoringForm({
           type="submit"
           variant="outline"
           disabled={isPending || !allScored}
-          onClick={() => setMarkComplete(false)}
+          onClick={() => {
+            shouldRedirect.current = false;
+            setMarkComplete(false);
+          }}
         >
           {isPending && !markComplete ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -164,7 +177,10 @@ export function ScoringForm({
           type="submit"
           variant="success"
           disabled={isPending || !allScored}
-          onClick={() => setMarkComplete(true)}
+          onClick={() => {
+            shouldRedirect.current = true;
+            setMarkComplete(true);
+          }}
         >
           {isPending && markComplete ? (
             <Loader2 className="w-4 h-4 animate-spin" />
