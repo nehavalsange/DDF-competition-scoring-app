@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { login } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/PasswordInput";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2, AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -74,10 +75,9 @@ function LoginForm() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
+                <PasswordInput
                   id="password"
                   name="password"
-                  type="password"
                   placeholder="Enter your password"
                   required
                   autoComplete="current-password"
@@ -91,34 +91,35 @@ function LoginForm() {
                 </div>
               )}
 
+              {/* Role selector — above Sign In */}
+              <div className="flex gap-3">
+                <Link
+                  href="/login?role=judge"
+                  className={`flex-1 text-center text-xs py-2 rounded-lg border transition-colors ${
+                    isJudge
+                      ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
+                      : "border-white/10 text-white/40 hover:text-white/60"
+                  }`}
+                >
+                  Judge
+                </Link>
+                <Link
+                  href="/login?role=admin"
+                  className={`flex-1 text-center text-xs py-2 rounded-lg border transition-colors ${
+                    isAdmin
+                      ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
+                      : "border-white/10 text-white/40 hover:text-white/60"
+                  }`}
+                >
+                  Admin
+                </Link>
+              </div>
+
               <Button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-bold hover:from-amber-400 hover:to-yellow-400" size="lg" disabled={isPending}>
                 {isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                 {isPending ? "Signing in..." : "Sign In"}
               </Button>
             </form>
-
-            <div className="mt-6 flex gap-3">
-              <Link
-                href="/login?role=judge"
-                className={`flex-1 text-center text-xs py-2 rounded-lg border transition-colors ${
-                  isJudge
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
-                    : "border-white/10 text-white/40 hover:text-white/60"
-                }`}
-              >
-                Judge
-              </Link>
-              <Link
-                href="/login?role=admin"
-                className={`flex-1 text-center text-xs py-2 rounded-lg border transition-colors ${
-                  isAdmin
-                    ? "border-amber-400/50 bg-amber-400/10 text-amber-300"
-                    : "border-white/10 text-white/40 hover:text-white/60"
-                }`}
-              >
-                Admin
-              </Link>
-            </div>
 
             <p className="text-center text-white/30 text-xs mt-4">
               <Link href="/" className="hover:text-white/50">← Back to home</Link>

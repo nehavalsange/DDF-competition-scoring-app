@@ -20,12 +20,12 @@ export default async function HomePage() {
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         >
           <source src="/opening-video.mp4" type="video/mp4" />
         </video>
-        {/* Overlay tuned to complement DDF gold+purple palette */}
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-950/75 via-black/55 to-purple-950/80" />
+        {/* Lighter at top so MANCH letters show through; darker at bottom for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-purple-950/85" />
       </div>
 
       {/* DDF Nav */}
@@ -67,11 +67,8 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <p className="text-amber-200/80 text-lg md:text-xl max-w-xl mb-3 font-medium">
+        <p className="text-amber-200/80 text-lg md:text-xl max-w-xl mb-10 font-medium">
           Arizona Dance Festival · May 9th
-        </p>
-        <p className="text-white/40 text-sm max-w-md mb-10">
-          Official judging platform for MANCH 2026. Sign in with your credentials to begin.
         </p>
 
         {/* Login buttons — gold + purple theme */}
@@ -97,13 +94,17 @@ export default async function HomePage() {
             </Button>
           </Link>
         </div>
+
+        <p className="text-white/40 text-sm mt-6 whitespace-nowrap">
+          Official judging platform for MANCH 2026 · Sign in with your credentials to begin
+        </p>
       </section>
 
       {/* Tagline footer */}
-      <footer className="relative z-10 text-center py-5 text-amber-300/30 text-xs border-t border-amber-400/10">
-        <span className="italic">"Where Art Breathes Grandeur"</span>
+      <footer className="relative z-10 text-center py-5 text-white/60 text-xs border-t border-white/10">
+        <span className="italic">"Art is not what you see, but what you make others see." — Edgar Degas</span>
         <span className="mx-3">·</span>
-        DDF Desi Dance & Fitness © 2026
+        DDF Desi Dance &amp; Fitness © 2026
       </footer>
     </main>
   );

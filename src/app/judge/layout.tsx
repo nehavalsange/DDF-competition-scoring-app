@@ -39,20 +39,16 @@ export default async function JudgeLayout({ children }: { children: React.ReactN
         </div>
       </nav>
 
-      {/* MANCH 2026 stage banner */}
+      {/* MANCH 2026 stage banner — object-top shows performers' heads */}
       <div className="relative h-36 md:h-48 overflow-hidden">
         <Image
           src="/manch-bg.png"
           alt="MANCH 2026 Stage"
           fill
-          className="object-cover object-center"
+          className="object-cover object-top"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/70" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-          <p className="text-amber-300 font-bold text-sm tracking-widest uppercase">MANCH 2026</p>
-          <p className="text-white/60 text-xs mt-0.5">Arizona Dance Festival · May 9th</p>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80" />
       </div>
 
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8 -mt-6">

@@ -9,6 +9,8 @@ import { AddTeamForm } from "@/components/AddTeamForm";
 import { AddJudgeForm } from "@/components/AddJudgeForm";
 import { PublishButton } from "@/components/PublishButton";
 import { DeleteTeamButton } from "@/components/DeleteTeamButton";
+import { DeleteCompetitionButton } from "@/components/DeleteCompetitionButton";
+import { ResetScoresButton } from "@/components/ResetScoresButton";
 import { formatDate } from "@/lib/utils";
 import { getCategoryLabel, TeamCategory } from "@/types";
 import {
@@ -91,7 +93,9 @@ export default async function CompetitionDetailPage({
               </Button>
             </Link>
           )}
+          <ResetScoresButton competitionId={id} />
           <PublishButton competitionId={id} status={competition.status} />
+          <DeleteCompetitionButton competitionId={id} />
         </div>
       </div>
 

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SubmitFinalButton } from "@/components/SubmitFinalButton";
 import { StarButton } from "@/components/StarButton";
-import { Trophy, CheckCircle, Clock, Play, Edit3, MapPin, Calendar } from "lucide-react";
+import { Trophy, CheckCircle, Clock, Play, Edit3, MapPin, Calendar, BookOpen } from "lucide-react";
 import { getCategoryLabel } from "@/types";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
@@ -66,17 +66,27 @@ export default async function JudgeDashboard() {
     <div>
       {/* Welcome */}
       <div className="flex items-center gap-3 mb-6">
-        <Image
-          src="/manch-logo.png"
-          alt="MANCH 2026"
-          width={56}
-          height={56}
-          className="rounded-xl"
-        />
-        <div>
-          <h1 className="text-2xl font-bold text-white">
-            Welcome, {session.name.split(" ")[0]}!
-          </h1>
+        <div className="w-14 h-14 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-amber-400/20">
+          <Image
+            src="/manch-logo.png"
+            alt="MANCH 2026"
+            width={56}
+            height={56}
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="flex-1">
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-2xl font-bold text-white">
+              Welcome, {session.name}!
+            </h1>
+            <Link href="/judge/parameters">
+              <Button variant="outline" size="sm" className="border-fuchsia-500/30 text-fuchsia-300 hover:bg-fuchsia-500/10 text-xs">
+                <BookOpen className="w-3.5 h-3.5" />
+                Judging Parameters
+              </Button>
+            </Link>
+          </div>
           <p className="text-white/40 text-sm">DDF MANCH 2026 Judging Panel</p>
         </div>
       </div>

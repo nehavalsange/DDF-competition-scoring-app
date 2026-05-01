@@ -126,6 +126,30 @@ export async function completeCompetition(competitionId: string) {
   revalidatePath("/admin");
 }
 
+export async function deleteCompetition(competitionId: string) {
+  await requireAdmin();
+  const teams = await db.team.findMany({ where: { competitionId }, select: { id: true } });
+  const teamIds = teams.map((t) => t.id);
+  await db.score.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.teamScoringProgress.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.scoreSubmission.deleteMany({ where: { competitionId } });
+  await db.judgeAssignment.deleteMany({ where: { competitionId } });
+  await db.team.deleteMany({ where: { competitionId } });
+  await db.competition.delete({ where: { id: competitionId } });
+  revalidatePath("/admin");
+  redirect("/admin");
+}
+
+export async function resetCompetitionScores(competitionId: string) {
+  await requireAdmin();
+  const teams = await db.team.findMany({ where: { competitionId }, select: { id: true } });
+  const teamIds = teams.map((t) => t.id);
+  await db.score.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.teamScoringProgress.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.scoreSubmission.deleteMany({ where: { competitionId } });
+  revalidatePath(`/admin/competitions/${competitionId}`);
+}
+
 export async function createAdminUser(name: string, username: string, password: string) {
   const existing = await db.user.findUnique({ where: { username } });
   if (existing) return { error: "Admin already exists." };
