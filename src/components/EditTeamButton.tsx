@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import { updateTeam } from "@/app/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,8 +80,8 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
         <Edit2 className="w-3.5 h-3.5" />
       </Button>
 
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {open && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
           <div className="relative z-10 w-full max-w-md bg-[#1a0f2e] border border-white/15 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]">
@@ -192,7 +193,8 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
               </Button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
