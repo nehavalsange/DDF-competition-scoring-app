@@ -51,10 +51,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           src="/manch-bg.png"
           alt="MANCH 2026 Stage"
           fill
-          className="object-cover object-top"
+          className="object-cover object-center"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/80" />
       </div>
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 -mt-4">

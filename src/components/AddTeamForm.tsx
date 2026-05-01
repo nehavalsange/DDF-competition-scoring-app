@@ -28,7 +28,7 @@ export function AddTeamForm({ competitionId }: { competitionId: string }) {
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label htmlFor="teamCode" className="text-xs">Team Code *</Label>
-          <Input id="teamCode" name="teamCode" placeholder="MUNCH001" required className="h-9 text-sm" />
+          <Input id="teamCode" name="teamCode" placeholder="MANCH001" required className="h-9 text-sm" />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="teamName" className="text-xs">Team Name *</Label>

@@ -44,7 +44,7 @@ export default function NewCompetitionPage() {
               <Input
                 id="name"
                 name="name"
-                placeholder="e.g. Munch Dance Championship 2025"
+                placeholder="e.g. MANCH Dance Championship 2026"
                 required
               />
             </div>

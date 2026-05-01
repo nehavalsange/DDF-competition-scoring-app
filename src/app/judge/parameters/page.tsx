@@ -6,124 +6,126 @@ import { ArrowLeft, ChevronDown } from "lucide-react";
 
 type Criterion = { name: string; desc: string };
 
-const SECTIONS: { title: string; subtitle: string; color: string; criteria: Criterion[] }[] = [
+type Award = {
+  title: string;
+  description: string;
+  criteria: Criterion[];
+};
+
+type Division = {
+  label: string;
+  color: "fuchsia" | "amber";
+  awards: Award[];
+};
+
+const DIVISIONS: Division[] = [
   {
-    title: "Jr Kids",
-    subtitle: "Ages 6–12 · 5 scoring parameters · Max 25 pts",
+    label: "Junior Kids Division",
     color: "fuchsia",
-    criteria: [
+    awards: [
       {
-        name: "Choreography",
-        desc: "Creative arrangement of movements, transitions, formations, and patterns. Judges look for variety, structure, and how well the choreography suits the team's age and skill level.",
-      },
-      {
-        name: "Creativity",
-        desc: "Originality and uniqueness in concept, movement vocabulary, and artistic expression. Does the performance feel fresh, imaginative, and distinctly theirs?",
-      },
-      {
-        name: "Stage Presence",
-        desc: "Confidence, charisma, and the ability to command the stage. Judges assess whether performers own their space and hold the audience's attention from start to finish.",
-      },
-      {
-        name: "Energy & Engagement",
-        desc: "Enthusiasm, consistent performance energy, and genuine connection with the audience. High-energy moments should feel authentic, not forced.",
-      },
-      {
-        name: "Overall Impact",
-        desc: "The total impression left on the judges — storytelling, synchronization, performance polish, and the lasting feeling after the performance ends.",
+        title: "Best Overall Performance – Junior Kids Division",
+        description:
+          "Awarded to the junior group that delivers the most well-rounded and engaging performance, demonstrating a strong blend of choreography, creativity, and performance confidence appropriate to their age group.",
+        criteria: [
+          { name: "Choreography", desc: "Age-appropriate, well-structured routines with clear formations and transitions." },
+          { name: "Creativity", desc: "Originality in movement, concept, and storytelling." },
+          { name: "Stage Presence", desc: "Confidence, enthusiasm, and awareness of the audience." },
+          { name: "Energy & Engagement", desc: "Consistent energy throughout the performance and commitment to movements." },
+          { name: "Overall Impact", desc: "Cohesiveness, execution, and ability to leave a lasting impression." },
+        ],
       },
     ],
   },
   {
-    title: "Sr Kids",
-    subtitle: "Ages 13–17 · 5 scoring parameters · Max 25 pts",
+    label: "Senior Kids Division (Tweens–Teens)",
     color: "fuchsia",
-    criteria: [
+    awards: [
       {
-        name: "Choreography",
-        desc: "Creative arrangement of movements, transitions, formations, and patterns. Judges expect more complexity and intentionality at this age group.",
-      },
-      {
-        name: "Creativity",
-        desc: "Originality and uniqueness in concept, movement vocabulary, and artistic expression. The performance should feel distinctly conceived, not imitative.",
-      },
-      {
-        name: "Stage Presence",
-        desc: "Confidence, charisma, and the ability to command the stage. At this level, judges look for individual personality shining through group performance.",
-      },
-      {
-        name: "Energy & Engagement",
-        desc: "Sustained performance energy and connection with the audience. Judges watch for consistency — energy should not dip in the middle sections.",
-      },
-      {
-        name: "Overall Impact",
-        desc: "The total impression left on the judges — storytelling, synchronization, performance polish, and the lasting feeling after the performance ends.",
+        title: "Best Overall Performance – Senior Kids Division",
+        description:
+          "Recognizes the senior group that showcases excellence across all performance aspects, demonstrating maturity, polish, and strong artistic intent.",
+        criteria: [
+          { name: "Choreography", desc: "Complexity, structure, and musical alignment." },
+          { name: "Creativity", desc: "Innovative ideas, interpretation, and originality." },
+          { name: "Stage Presence", desc: "Confidence, command of the stage, and performer charisma." },
+          { name: "Energy & Engagement", desc: "Control of intensity, variation, and stamina throughout the piece." },
+          { name: "Overall Performance Quality", desc: "Precision, cohesion, and artistic excellence as a group." },
+        ],
       },
     ],
   },
   {
-    title: "Adult",
-    subtitle: "Ages 18+ · 9 scoring parameters · Max 45 pts",
+    label: "Adult Group Division",
     color: "amber",
-    criteria: [
+    awards: [
       {
-        name: "Stage Presence",
-        desc: "Confidence and command of the stage throughout the entire performance. Judges assess natural charisma, spatial awareness, and the ability to draw eyes without forcing attention.",
+        title: "Best Stage Presence – Group",
+        description:
+          "Presented to the group that most effectively commands the stage and captivates the audience through confident movement, energy, and strong spatial awareness.",
+        criteria: [
+          { name: "Usage of Stage Space", desc: "Effective formations, transitions, and full use of the performance area." },
+          { name: "Energy on Stage", desc: "Projection, enthusiasm, and sustained performance quality." },
+          { name: "Choice of Music", desc: "Strong alignment between music selection and stage performance." },
+          { name: "Audience Connection", desc: "Engagement through expressions, confidence, and visual impact." },
+          { name: "Group Unity", desc: "Synchronized presence and collective stage confidence." },
+        ],
       },
       {
-        name: "Precision",
-        desc: "Technical accuracy, rhythmic timing, and synchronized execution within the group. Clean lines, sharp transitions, and unison movement are key markers.",
+        title: "Most Expressive Performance – Group",
+        description:
+          "Awarded to the group that best conveys emotion, theme, or narrative through expressive movement, facial expressions, and artistic interpretation.",
+        criteria: [
+          { name: "Theme Expression", desc: "Clear communication of the story or concept." },
+          { name: "Emotional Connection", desc: "Authentic expressions and emotional depth." },
+          { name: "Choreographic Interpretation", desc: "Movements that enhance the mood and message." },
+          { name: "Creativity", desc: "Unique and meaningful presentation of the theme." },
+          { name: "Consistency", desc: "Expression maintained throughout the performance by all dancers." },
+        ],
       },
       {
-        name: "Connect",
-        desc: "Emotional connection between performers and with the audience. Judges look for chemistry within the group, eye contact, and moments that feel human and real.",
+        title: "Technique Excellence Award – Group",
+        description:
+          "Recognizes the group that demonstrates superior technical skill, precision, and disciplined execution while performing cohesively as a unit.",
+        criteria: [
+          { name: "Technical Precision", desc: "Accuracy of movements, timing, posture, and alignment." },
+          { name: "Choreographic Complexity", desc: "Challenges successfully executed." },
+          { name: "Synchronization", desc: "Uniform execution and group coordination." },
+          { name: "Theme Relevance", desc: "Technique supports and enhances the theme." },
+          { name: "Group Delivery", desc: "Consistency and polish across all performers." },
+        ],
       },
       {
-        name: "Choreo",
-        desc: "Complexity, flow, and quality of the choreographic composition. Adult teams are expected to show layered structure, creative formations, and purposeful movement design.",
-      },
-      {
-        name: "Creativity",
-        desc: "Originality in concept selection, movement choices, and overall artistic vision. The performance should offer something surprising or distinctive.",
-      },
-      {
-        name: "Expression",
-        desc: "Facial expression, emotional depth, and storytelling through movement. Every dancer on stage should be performing — not just executing steps.",
-      },
-      {
-        name: "Theme",
-        desc: "Coherence, clarity, and quality of execution of the chosen theme or narrative. Costume, music, and movement should reinforce a single unified idea.",
-      },
-      {
-        name: "Technique",
-        desc: "Dance skill, body alignment, posture, extension, and technical proficiency. Judges evaluate the quality of fundamental dance execution across the whole team.",
-      },
-      {
-        name: "Props",
-        desc: "Effective, creative, and seamless integration of props into the performance. Props should enhance the story — not distract from or substitute for dance quality.",
+        title: "Best Choreography – Group",
+        description:
+          "Awarded to the group with the most outstanding and original choreography, showcasing creativity, thoughtful design, and effective execution.",
+        criteria: [
+          { name: "Originality", desc: "Innovative movement vocabulary and creative structure." },
+          { name: "Theme Relevance", desc: "Clear alignment with the idea or concept presented." },
+          { name: "Execution", desc: "Precision and clarity in bringing the choreography to life." },
+          { name: "Creativity & Design", desc: "Effective use of formations, transitions, dynamics, and levels." },
+          { name: "Use of Props & Stage Presence", desc: "Purposeful and impactful integration (where applicable)." },
+        ],
       },
     ],
   },
 ];
 
-function Section({
-  section,
-}: {
-  section: (typeof SECTIONS)[number];
-}) {
-  const [open, setOpen] = useState<string | null>(null);
-  const isFuchsia = section.color === "fuchsia";
+function AwardCard({ award, color }: { award: Award; color: "fuchsia" | "amber" }) {
+  const [openCriterion, setOpenCriterion] = useState<string | null>(null);
+  const isFuchsia = color === "fuchsia";
+  const accent = isFuchsia ? "fuchsia" : "amber";
 
   return (
-    <div className="mb-8">
-      <div className={`rounded-2xl border px-5 py-4 mb-3 ${isFuchsia ? "border-fuchsia-500/20 bg-fuchsia-500/5" : "border-amber-400/20 bg-amber-400/5"}`}>
-        <h2 className={`text-lg font-bold ${isFuchsia ? "text-fuchsia-300" : "text-amber-300"}`}>{section.title}</h2>
-        <p className="text-white/40 text-xs mt-0.5">{section.subtitle}</p>
+    <div className="mb-6">
+      <div className={`rounded-xl border px-4 py-3 mb-3 ${isFuchsia ? "border-fuchsia-500/20 bg-fuchsia-500/5" : "border-amber-400/20 bg-amber-400/5"}`}>
+        <h3 className={`font-semibold text-sm ${isFuchsia ? "text-fuchsia-200" : "text-amber-200"}`}>{award.title}</h3>
+        <p className="text-white/50 text-xs mt-1 leading-relaxed">{award.description}</p>
       </div>
 
-      <div className="space-y-2">
-        {section.criteria.map((c) => {
-          const isOpen = open === c.name;
+      <div className="space-y-1.5 pl-2">
+        {award.criteria.map((c) => {
+          const isOpen = openCriterion === c.name;
           return (
             <div
               key={c.name}
@@ -132,18 +134,18 @@ function Section({
               }`}
             >
               <button
-                className="w-full flex items-center justify-between px-4 py-3 text-left"
-                onClick={() => setOpen(isOpen ? null : c.name)}
+                className="w-full flex items-center justify-between px-4 py-2.5 text-left gap-3"
+                onClick={() => setOpenCriterion(isOpen ? null : c.name)}
               >
-                <span className={`font-semibold text-sm ${isOpen ? (isFuchsia ? "text-fuchsia-300" : "text-amber-300") : "text-white/80"}`}>
+                <span className={`font-medium text-sm ${isOpen ? (isFuchsia ? "text-fuchsia-300" : "text-amber-300") : "text-white/75"}`}>
                   {c.name}
                 </span>
                 <ChevronDown
-                  className={`w-4 h-4 text-white/40 flex-shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                  className={`w-4 h-4 flex-shrink-0 text-white/30 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                 />
               </button>
               {isOpen && (
-                <p className="px-4 pb-4 text-white/60 text-sm leading-relaxed border-t border-white/8 pt-3">
+                <p className="px-4 pb-3 text-white/55 text-sm leading-relaxed border-t border-white/8 pt-2.5">
                   {c.desc}
                 </p>
               )}
@@ -164,12 +166,24 @@ export default function JudgingParametersPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-white">Judging Parameters</h1>
-          <p className="text-white/40 text-sm">MANCH 2026 · Tap any criterion to expand</p>
+          <p className="text-white/40 text-sm">MANCH 2026 · Tap any criterion to expand its description</p>
         </div>
       </div>
 
-      {SECTIONS.map((s) => (
-        <Section key={s.title} section={s} />
+      {DIVISIONS.map((div) => (
+        <div key={div.label} className="mb-10">
+          <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase mb-4 ${
+            div.color === "fuchsia"
+              ? "bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/25"
+              : "bg-amber-400/15 text-amber-300 border border-amber-400/25"
+          }`}>
+            {div.label}
+          </div>
+
+          {div.awards.map((award) => (
+            <AwardCard key={award.title} award={award} color={div.color} />
+          ))}
+        </div>
       ))}
     </div>
   );

@@ -75,20 +75,18 @@ export default async function JudgeDashboard() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="flex-1">
-          <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl font-bold text-white">
-              Welcome, {session.name}!
-            </h1>
-            <Link href="/judge/parameters">
-              <Button variant="outline" size="sm" className="border-fuchsia-500/30 text-fuchsia-300 hover:bg-fuchsia-500/10 text-xs">
-                <BookOpen className="w-3.5 h-3.5" />
-                Judging Parameters
-              </Button>
-            </Link>
-          </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-2xl font-bold text-white truncate">
+            Welcome, {session.name}!
+          </h1>
           <p className="text-white/40 text-sm">DDF MANCH 2026 Judging Panel</p>
         </div>
+        <Link href="/judge/parameters" className="flex-shrink-0">
+          <Button variant="outline" size="sm" className="border-fuchsia-500/30 text-fuchsia-300 hover:bg-fuchsia-500/10 text-xs">
+            <BookOpen className="w-3.5 h-3.5" />
+            Judging Parameters
+          </Button>
+        </Link>
       </div>
 
       {/* Competition info card */}
