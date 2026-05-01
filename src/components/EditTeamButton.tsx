@@ -84,7 +84,7 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
-          <div className="relative z-10 w-full max-w-md bg-[#1a0f2e] border border-white/15 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]">
+          <div className="relative z-10 w-full max-w-md bg-[#1a0f2e] border border-white/15 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]" onClick={(e) => e.stopPropagation()}>
             {/* Fixed header */}
             <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/10 flex-shrink-0">
               <h2 className="text-white font-bold text-lg">Edit Team</h2>
@@ -138,7 +138,7 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="DANCING">Dancing</SelectItem>
+                    <SelectItem value="DANCING">Dance</SelectItem>
                     <SelectItem value="SINGING">Singing</SelectItem>
                   </SelectContent>
                 </Select>

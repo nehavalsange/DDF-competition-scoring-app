@@ -61,7 +61,7 @@ export function AddTeamForm({ competitionId }: { competitionId: string }) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="DANCING">Dancing</SelectItem>
+            <SelectItem value="DANCING">Dance</SelectItem>
             <SelectItem value="SINGING">Singing</SelectItem>
           </SelectContent>
         </Select>

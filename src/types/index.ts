@@ -39,5 +39,5 @@ export function getCategoryLabel(category: TeamCategory): string {
 }
 
 export function getPerformanceTypeLabel(performanceType: PerformanceType): string {
-  return performanceType === "SINGING" ? "Singing" : "Dancing";
+  return performanceType === "SINGING" ? "Singing" : "Dance";
 }
