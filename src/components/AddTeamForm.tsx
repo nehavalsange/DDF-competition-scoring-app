@@ -14,17 +14,21 @@ export function AddTeamForm({ competitionId }: { competitionId: string }) {
   const [state, action, isPending] = useActionState(addTeam, null);
   const formRef = useRef<HTMLFormElement>(null);
   const [category, setCategory] = useState("");
+  const [performanceType, setPerformanceType] = useState("DANCING");
 
   useEffect(() => {
     if (state?.success) {
       formRef.current?.reset();
       setCategory("");
+      setPerformanceType("DANCING");
     }
   }, [state]);
 
   return (
     <form action={action} ref={formRef} className="space-y-4">
       <input type="hidden" name="competitionId" value={competitionId} />
+      <input type="hidden" name="performanceType" value={performanceType} />
+
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
           <Label htmlFor="teamCode" className="text-xs">Team Code *</Label>
@@ -37,7 +41,7 @@ export function AddTeamForm({ competitionId }: { competitionId: string }) {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="category" className="text-xs">Category *</Label>
+        <Label className="text-xs">Category *</Label>
         <Select name="category" value={category} onValueChange={setCategory} required>
           <SelectTrigger className="h-9 text-sm">
             <SelectValue placeholder="Select category" />
@@ -46,6 +50,18 @@ export function AddTeamForm({ competitionId }: { competitionId: string }) {
             <SelectItem value="JR_KIDS">Jr Kids</SelectItem>
             <SelectItem value="SR_KIDS">Sr Kids</SelectItem>
             <SelectItem value="ADULT">Adult</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-1.5">
+        <Label className="text-xs">Sub-category *</Label>
+        <Select value={performanceType} onValueChange={setPerformanceType}>
+          <SelectTrigger className="h-9 text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="DANCING">Dancing</SelectItem>
             <SelectItem value="SINGING">Singing</SelectItem>
           </SelectContent>
         </Select>

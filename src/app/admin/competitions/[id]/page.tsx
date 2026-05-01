@@ -13,7 +13,7 @@ import { EditTeamButton } from "@/components/EditTeamButton";
 import { DeleteCompetitionButton } from "@/components/DeleteCompetitionButton";
 import { ResetScoresButton } from "@/components/ResetScoresButton";
 import { formatDate } from "@/lib/utils";
-import { getCategoryLabel, TeamCategory } from "@/types";
+import { getCategoryLabel, TeamCategory, PerformanceType } from "@/types";
 import {
   ArrowLeft, Calendar, MapPin, Users, Trophy,
   BarChart3, CheckCircle, Clock, AlertCircle
@@ -61,7 +61,6 @@ export default async function CompetitionDetailPage({
     JR_KIDS: competition.teams.filter((t) => t.category === "JR_KIDS"),
     SR_KIDS: competition.teams.filter((t) => t.category === "SR_KIDS"),
     ADULT: competition.teams.filter((t) => t.category === "ADULT"),
-    SINGING: competition.teams.filter((t) => t.category === "SINGING"),
   };
 
   return (
@@ -190,11 +189,16 @@ export default async function CompetitionDetailPage({
                     {teams.map((team) => (
                       <div key={team.id} className="glass rounded-xl px-4 py-3 flex items-center gap-3">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-fuchsia-300 text-sm font-mono font-medium">
                               {team.teamCode}
                             </span>
                             <span className="text-white text-sm">{team.teamName}</span>
+                            {team.performanceType === "SINGING" && (
+                              <span className="text-xs px-1.5 py-0.5 rounded-md bg-fuchsia-500/15 text-fuchsia-300 border border-fuchsia-500/20">
+                                Singing
+                              </span>
+                            )}
                           </div>
                           {team.description && (
                             <p className="text-white/30 text-xs mt-0.5 line-clamp-1">
@@ -210,6 +214,7 @@ export default async function CompetitionDetailPage({
                               teamCode: team.teamCode,
                               teamName: team.teamName,
                               category: team.category,
+                              performanceType: team.performanceType,
                               description: team.description ?? "",
                             }}
                           />

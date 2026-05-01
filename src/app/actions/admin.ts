@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { TeamCategory } from "@/types";
-import { TeamCategory as PrismaTeamCategory } from "@/generated/prisma";
+import { TeamCategory as PrismaTeamCategory, PerformanceType as PrismaPerformanceType } from "@/generated/prisma";
 
 export async function createCompetition(
   _prev: { error?: string; success?: boolean } | null,
@@ -44,6 +44,7 @@ export async function addTeam(
   const teamCode = formData.get("teamCode") as string;
   const teamName = formData.get("teamName") as string;
   const category = formData.get("category") as TeamCategory;
+  const performanceType = (formData.get("performanceType") as PrismaPerformanceType) ?? "DANCING";
   const description = formData.get("description") as string;
 
   if (!competitionId || !teamCode || !teamName || !category) {
@@ -52,7 +53,7 @@ export async function addTeam(
 
   try {
     await db.team.create({
-      data: { competitionId, teamCode, teamName, category, description: description || null },
+      data: { competitionId, teamCode, teamName, category, performanceType, description: description || null },
     });
   } catch {
     return { error: "Team code must be unique within the competition." };
@@ -71,7 +72,7 @@ export async function deleteTeam(teamId: string, competitionId: string) {
 export async function updateTeam(
   teamId: string,
   competitionId: string,
-  data: { teamCode: string; teamName: string; category: PrismaTeamCategory; description: string }
+  data: { teamCode: string; teamName: string; category: PrismaTeamCategory; performanceType: PrismaPerformanceType; description: string }
 ) {
   await requireAdmin();
   try {
@@ -81,6 +82,7 @@ export async function updateTeam(
         teamCode: data.teamCode,
         teamName: data.teamName,
         category: data.category,
+        performanceType: data.performanceType,
         description: data.description || null,
       },
     });

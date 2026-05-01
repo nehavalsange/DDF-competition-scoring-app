@@ -2,12 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { updateTeam } from "@/app/actions/admin";
-import { TeamCategory } from "@/generated/prisma";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TeamCategory, PerformanceType } from "@/generated/prisma";
 import { Edit2, X, AlertCircle, Loader2, Check } from "lucide-react";
 
 interface Props {
@@ -17,6 +17,7 @@ interface Props {
     teamCode: string;
     teamName: string;
     category: string;
+    performanceType: string;
     description: string;
   };
 }
@@ -30,12 +31,14 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
   const [teamCode, setTeamCode] = useState(initialData.teamCode);
   const [teamName, setTeamName] = useState(initialData.teamName);
   const [category, setCategory] = useState(initialData.category);
+  const [performanceType, setPerformanceType] = useState(initialData.performanceType || "DANCING");
   const [description, setDescription] = useState(initialData.description ?? "");
 
   function handleOpen() {
     setTeamCode(initialData.teamCode);
     setTeamName(initialData.teamName);
     setCategory(initialData.category);
+    setPerformanceType(initialData.performanceType || "DANCING");
     setDescription(initialData.description ?? "");
     setError(null);
     setSuccess(false);
@@ -53,6 +56,7 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
         teamCode: teamCode.trim(),
         teamName: teamName.trim(),
         category: category as TeamCategory,
+        performanceType: performanceType as PerformanceType,
         description: description.trim(),
       });
       if (result?.error) {
@@ -78,8 +82,10 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-          <div className="relative z-10 w-full max-w-md bg-[#1a0f2e] border border-white/15 rounded-2xl shadow-2xl p-6">
-            <div className="flex items-center justify-between mb-5">
+
+          <div className="relative z-10 w-full max-w-md bg-[#1a0f2e] border border-white/15 rounded-2xl shadow-2xl flex flex-col max-h-[88vh]">
+            {/* Fixed header */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/10 flex-shrink-0">
               <h2 className="text-white font-bold text-lg">Edit Team</h2>
               <button
                 onClick={() => setOpen(false)}
@@ -89,7 +95,8 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
               </button>
             </div>
 
-            <div className="space-y-4">
+            {/* Scrollable body */}
+            <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label className="text-xs text-white/60">Team Code *</Label>
@@ -119,6 +126,18 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
                     <SelectItem value="JR_KIDS">Jr Kids</SelectItem>
                     <SelectItem value="SR_KIDS">Sr Kids</SelectItem>
                     <SelectItem value="ADULT">Adult</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs text-white/60">Sub-category *</Label>
+                <Select value={performanceType} onValueChange={setPerformanceType}>
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="DANCING">Dancing</SelectItem>
                     <SelectItem value="SINGING">Singing</SelectItem>
                   </SelectContent>
                 </Select>
@@ -150,7 +169,8 @@ export function EditTeamButton({ teamId, competitionId, initialData }: Props) {
               )}
             </div>
 
-            <div className="flex gap-3 mt-6">
+            {/* Fixed footer */}
+            <div className="flex gap-3 px-6 py-4 border-t border-white/10 flex-shrink-0">
               <Button
                 variant="ghost"
                 className="flex-1 text-white/60 hover:text-white"

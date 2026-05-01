@@ -1,4 +1,5 @@
-export type TeamCategory = "JR_KIDS" | "SR_KIDS" | "ADULT" | "SINGING";
+export type TeamCategory = "JR_KIDS" | "SR_KIDS" | "ADULT";
+export type PerformanceType = "DANCING" | "SINGING";
 export type ScoreStatus = "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
 export type CompetitionStatus = "DRAFT" | "PUBLISHED" | "COMPLETED";
 export type Role = "ADMIN" | "JUDGE";
@@ -23,9 +24,9 @@ export const ADULT_CATEGORIES = [
   "Props",
 ] as const;
 
-export function getScoringCategories(category: TeamCategory): readonly string[] {
+export function getScoringCategories(category: TeamCategory, performanceType: PerformanceType = "DANCING"): readonly string[] {
+  if (performanceType === "SINGING") return [];
   if (category === "ADULT") return ADULT_CATEGORIES;
-  if (category === "SINGING") return [];
   return JR_SR_CATEGORIES;
 }
 
@@ -34,6 +35,9 @@ export function getCategoryLabel(category: TeamCategory): string {
     case "JR_KIDS": return "Jr Kids";
     case "SR_KIDS": return "Sr Kids";
     case "ADULT": return "Adult";
-    case "SINGING": return "Singing";
   }
+}
+
+export function getPerformanceTypeLabel(performanceType: PerformanceType): string {
+  return performanceType === "SINGING" ? "Singing" : "Dancing";
 }

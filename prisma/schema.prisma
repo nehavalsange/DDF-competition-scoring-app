@@ -25,6 +25,11 @@ enum TeamCategory {
   SINGING
 }
 
+enum PerformanceType {
+  DANCING
+  SINGING
+}
+
 enum ScoreStatus {
   NOT_STARTED
   IN_PROGRESS
@@ -64,8 +69,9 @@ model Team {
   competitionId String
   teamCode      String
   teamName      String
-  category      TeamCategory
-  description   String?
+  category        TeamCategory
+  performanceType PerformanceType @default(DANCING)
+  description     String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 

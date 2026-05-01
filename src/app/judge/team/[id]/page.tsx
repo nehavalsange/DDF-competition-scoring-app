@@ -1,7 +1,7 @@
 import { requireJudge } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { notFound, redirect } from "next/navigation";
-import { getScoringCategories, getCategoryLabel } from "@/types";
+import { getScoringCategories, getCategoryLabel, getPerformanceTypeLabel } from "@/types";
 import { ScoringForm } from "@/components/ScoringForm";
 import { SingingTeamComplete } from "@/components/SingingTeamComplete";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,8 +53,8 @@ export default async function TeamScoringPage({
     where: { judgeId_teamId: { judgeId, teamId } },
   });
 
-  const isSinging = team.category === "SINGING";
-  const categories = isSinging ? [] : getScoringCategories(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT");
+  const isSinging = team.performanceType === "SINGING";
+  const categories = isSinging ? [] : getScoringCategories(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT", team.performanceType as "DANCING" | "SINGING");
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -77,7 +77,10 @@ export default async function TeamScoringPage({
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-amber-300 font-mono font-medium">{team.teamCode}</span>
                 <Badge variant="default">
-                  {getCategoryLabel(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT" | "SINGING")}
+                  {getCategoryLabel(team.category as "JR_KIDS" | "SR_KIDS" | "ADULT")}
+                </Badge>
+                <Badge variant={isSinging ? "secondary" : "warning"}>
+                  {getPerformanceTypeLabel(team.performanceType as "DANCING" | "SINGING")}
                 </Badge>
               </div>
               <h2 className="text-white font-semibold text-lg">{team.teamName}</h2>
