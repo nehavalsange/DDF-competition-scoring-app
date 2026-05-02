@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { InactivityLogout } from "@/components/InactivityLogout";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireAdmin();
@@ -60,6 +61,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       <main className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 py-8 -mt-4">
         {children}
       </main>
+      <InactivityLogout />
     </div>
   );
 }

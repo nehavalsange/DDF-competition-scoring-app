@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { InactivityLogout } from "@/components/InactivityLogout";
 
 export default async function JudgeLayout({ children }: { children: React.ReactNode }) {
   const session = await requireJudge();
@@ -54,6 +55,7 @@ export default async function JudgeLayout({ children }: { children: React.ReactN
       <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
         {children}
       </main>
+      <InactivityLogout />
     </div>
   );
 }

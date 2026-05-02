@@ -212,13 +212,11 @@ export default async function ResultsPage({
                     </thead>
                     <tbody>
                       {catScores
-                        .sort((a, b) => b.total - a.total)
-                        .map((row, i) => (
+                        .sort((a, b) => a.teamCode.localeCompare(b.teamCode, undefined, { numeric: true }))
+                        .map((row) => (
                           <tr
                             key={row.teamCode}
-                            className={`border-b border-white/5 ${
-                              i === 0 && row.total > 0 ? "bg-fuchsia-500/10" : ""
-                            }`}
+                            className="border-b border-white/5"
                           >
                             <td className="py-2 px-3">
                               <span className="text-amber-300 font-mono text-xs mr-2">
