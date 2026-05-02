@@ -10,6 +10,8 @@ import { AddJudgeForm } from "@/components/AddJudgeForm";
 import { PublishButton } from "@/components/PublishButton";
 import { DeleteTeamButton } from "@/components/DeleteTeamButton";
 import { EditTeamButton } from "@/components/EditTeamButton";
+import { ChangeJudgePasswordButton } from "@/components/ChangeJudgePasswordButton";
+import { DeleteJudgeButton } from "@/components/DeleteJudgeButton";
 import { DeleteCompetitionButton } from "@/components/DeleteCompetitionButton";
 import { ResetScoresButton } from "@/components/ResetScoresButton";
 import { formatDate } from "@/lib/utils";
@@ -24,7 +26,8 @@ export default async function CompetitionDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdmin();
+  const session = await requireAdmin();
+  const isReadOnly = session.adminPermission === "READ_ONLY";
   const { id } = await params;
 
   const competition = await db.competition.findUnique({
@@ -94,9 +97,9 @@ export default async function CompetitionDetailPage({
               </Button>
             </Link>
           )}
-          <ResetScoresButton competitionId={id} />
-          <PublishButton competitionId={id} status={competition.status} />
-          <DeleteCompetitionButton competitionId={id} />
+          {!isReadOnly && <ResetScoresButton competitionId={id} />}
+          {!isReadOnly && <PublishButton competitionId={id} status={competition.status} />}
+          {!isReadOnly && <DeleteCompetitionButton competitionId={id} />}
         </div>
       </div>
 
@@ -206,20 +209,22 @@ export default async function CompetitionDetailPage({
                             </p>
                           )}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <EditTeamButton
-                            teamId={team.id}
-                            competitionId={id}
-                            initialData={{
-                              teamCode: team.teamCode,
-                              teamName: team.teamName,
-                              category: team.category,
-                              performanceType: team.performanceType,
-                              description: team.description ?? "",
-                            }}
-                          />
-                          <DeleteTeamButton teamId={team.id} competitionId={id} />
-                        </div>
+                        {!isReadOnly && (
+                          <div className="flex items-center gap-1">
+                            <EditTeamButton
+                              teamId={team.id}
+                              competitionId={id}
+                              initialData={{
+                                teamCode: team.teamCode,
+                                teamName: team.teamName,
+                                category: team.category,
+                                performanceType: team.performanceType,
+                                description: team.description ?? "",
+                              }}
+                            />
+                            <DeleteTeamButton teamId={team.id} competitionId={id} />
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -231,27 +236,31 @@ export default async function CompetitionDetailPage({
 
         {/* Sidebar */}
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-fuchsia-400" /> Add Team
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AddTeamForm competitionId={id} />
-            </CardContent>
-          </Card>
+          {!isReadOnly && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-fuchsia-400" /> Add Team
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AddTeamForm competitionId={id} />
+              </CardContent>
+            </Card>
+          )}
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Users className="w-4 h-4 text-fuchsia-400" /> Add Judge
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AddJudgeForm competitionId={id} />
-            </CardContent>
-          </Card>
+          {!isReadOnly && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Users className="w-4 h-4 text-fuchsia-400" /> Add Judge
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AddJudgeForm competitionId={id} />
+              </CardContent>
+            </Card>
+          )}
 
           {competition.judgeAssignments.length > 0 && (
             <Card>
@@ -261,13 +270,27 @@ export default async function CompetitionDetailPage({
               <CardContent className="space-y-2">
                 {competition.judgeAssignments.map((a) => (
                   <div key={a.id} className="flex items-center gap-2 text-sm">
-                    <div className="w-7 h-7 rounded-full bg-fuchsia-500/20 flex items-center justify-center text-fuchsia-300 text-xs font-semibold">
+                    <div className="w-7 h-7 rounded-full bg-fuchsia-500/20 flex items-center justify-center text-fuchsia-300 text-xs font-semibold flex-shrink-0">
                       {a.user.name[0]}
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <span className="text-white">{a.user.name}</span>
                       <span className="text-white/30 ml-1.5 text-xs">@{a.user.username}</span>
                     </div>
+                    {!isReadOnly && (
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
+                        <ChangeJudgePasswordButton
+                          userId={a.user.id}
+                          competitionId={id}
+                          judgeName={a.user.name}
+                        />
+                        <DeleteJudgeButton
+                          userId={a.user.id}
+                          competitionId={id}
+                          judgeName={a.user.name}
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
               </CardContent>

@@ -6,7 +6,8 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { TeamCategory } from "@/types";
-import { TeamCategory as PrismaTeamCategory, PerformanceType as PrismaPerformanceType } from "@/generated/prisma";
+import { TeamCategory as PrismaTeamCategory, PerformanceType as PrismaPerformanceType, AdminPermission } from "@/generated/prisma";
+import { requireAdminWrite } from "@/lib/auth";
 
 export async function createCompetition(
   _prev: { error?: string; success?: boolean } | null,
@@ -216,6 +217,62 @@ export async function resetCompetitionScoresWithAuth(
   await db.teamScoringProgress.deleteMany({ where: { teamId: { in: teamIds } } });
   await db.scoreSubmission.deleteMany({ where: { competitionId } });
   revalidatePath(`/admin/competitions/${competitionId}`);
+  return { success: true };
+}
+
+export async function changeJudgePassword(userId: string, newPassword: string, competitionId: string) {
+  await requireAdminWrite();
+  if (!newPassword || newPassword.length < 6) return { error: "Password must be at least 6 characters." };
+  const hash = await bcrypt.hash(newPassword, 12);
+  await db.user.update({ where: { id: userId }, data: { passwordHash: hash } });
+  revalidatePath(`/admin/competitions/${competitionId}`);
+  return { success: true };
+}
+
+export async function deleteJudgeAccount(userId: string, competitionId: string) {
+  await requireAdminWrite();
+  // Cascade: delete scores, progress, submissions, assignments, judge record, user
+  const judge = await db.judge.findUnique({ where: { userId } });
+  if (judge) {
+    await db.score.deleteMany({ where: { judgeId: judge.id } });
+    await db.teamScoringProgress.deleteMany({ where: { judgeId: judge.id } });
+    await db.scoreSubmission.deleteMany({ where: { judgeId: judge.id } });
+    await db.judgeAssignment.deleteMany({ where: { judgeId: judge.id } });
+    await db.judge.delete({ where: { id: judge.id } });
+  }
+  await db.user.delete({ where: { id: userId } });
+  revalidatePath(`/admin/competitions/${competitionId}`);
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+const TEST_ADMINS = [
+  { name: "Viewer One",  username: "viewer1",   password: "View@MANCH26#1",  permission: "READ_ONLY"  as AdminPermission },
+  { name: "Viewer Two",  username: "viewer2",   password: "View@MANCH26#2",  permission: "READ_ONLY"  as AdminPermission },
+  { name: "Staff One",   username: "staffone",  password: "Staff@MANCH26#1", permission: "READ_WRITE" as AdminPermission },
+  { name: "Staff Two",   username: "stafftwo",  password: "Staff@MANCH26#2", permission: "READ_WRITE" as AdminPermission },
+];
+
+export async function createTestAdmins() {
+  await requireAdminWrite();
+  const created: { name: string; username: string; password: string; permission: string }[] = [];
+  for (const t of TEST_ADMINS) {
+    const exists = await db.user.findUnique({ where: { username: t.username } });
+    if (exists) continue;
+    const passwordHash = await bcrypt.hash(t.password, 12);
+    await db.user.create({
+      data: { name: t.name, username: t.username, passwordHash, role: "ADMIN", adminPermission: t.permission },
+    });
+    created.push({ name: t.name, username: t.username, password: t.password, permission: t.permission });
+  }
+  revalidatePath("/admin");
+  return { created };
+}
+
+export async function deleteTestAdmin(userId: string) {
+  await requireAdminWrite();
+  await db.user.delete({ where: { id: userId } });
+  revalidatePath("/admin");
   return { success: true };
 }
 

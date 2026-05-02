@@ -6,15 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trophy, Users, Calendar, MapPin, ArrowRight } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { AdminAccessSection } from "@/components/AdminAccessSection";
 
 export default async function AdminDashboard() {
-  await requireAdmin();
+  const session = await requireAdmin();
+  const isReadOnly = session.adminPermission === "READ_ONLY";
 
   const competitions = await db.competition.findMany({
     orderBy: { createdAt: "desc" },
     include: {
       _count: { select: { teams: true, judgeAssignments: true } },
     },
+  });
+
+  // Fetch all admin users (excluding primary admin who has no adminPermission set)
+  const adminUsers = await db.user.findMany({
+    where: { role: "ADMIN" },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, name: true, username: true, adminPermission: true },
   });
 
   const statusConfig = {
@@ -30,12 +39,14 @@ export default async function AdminDashboard() {
           <h1 className="text-3xl font-bold text-white mb-1">Competitions</h1>
           <p className="text-white/50">Manage your dance competitions</p>
         </div>
-        <Link href="/admin/competitions/new">
-          <Button>
-            <Plus className="w-4 h-4" />
-            New Competition
-          </Button>
-        </Link>
+        {!isReadOnly && (
+          <Link href="/admin/competitions/new">
+            <Button>
+              <Plus className="w-4 h-4" />
+              New Competition
+            </Button>
+          </Link>
+        )}
       </div>
 
       {competitions.length === 0 ? (
@@ -43,11 +54,11 @@ export default async function AdminDashboard() {
           <Trophy className="w-12 h-12 text-white/20 mx-auto mb-4" />
           <h3 className="text-white/60 font-semibold text-lg mb-2">No competitions yet</h3>
           <p className="text-white/30 text-sm mb-6">Create your first competition to get started.</p>
-          <Link href="/admin/competitions/new">
-            <Button>
-              <Plus className="w-4 h-4" /> Create Competition
-            </Button>
-          </Link>
+          {!isReadOnly && (
+            <Link href="/admin/competitions/new">
+              <Button><Plus className="w-4 h-4" /> Create Competition</Button>
+            </Link>
+          )}
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -90,6 +101,16 @@ export default async function AdminDashboard() {
             );
           })}
         </div>
+      )}
+
+      {/* Admin Access section — only visible to read-write admins */}
+      {!isReadOnly && (
+        <AdminAccessSection
+          admins={adminUsers.map((a) => ({
+            ...a,
+            adminPermission: a.adminPermission as "READ_ONLY" | "READ_WRITE" | null,
+          }))}
+        />
       )}
     </div>
   );

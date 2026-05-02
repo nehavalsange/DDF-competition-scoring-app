@@ -9,6 +9,7 @@ export type SessionPayload = {
   name: string;
   role: "ADMIN" | "JUDGE";
   judgeId?: string;
+  adminPermission?: "READ_ONLY" | "READ_WRITE";
 };
 
 const secretKey = process.env.SESSION_SECRET;

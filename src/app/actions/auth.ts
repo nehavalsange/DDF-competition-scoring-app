@@ -34,6 +34,7 @@ export async function login(
     name: user.name,
     role: user.role as "ADMIN" | "JUDGE",
     judgeId,
+    adminPermission: user.adminPermission as "READ_ONLY" | "READ_WRITE" | undefined,
   });
 
   if (user.role === "ADMIN") {

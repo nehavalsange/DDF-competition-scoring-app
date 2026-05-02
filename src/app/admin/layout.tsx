@@ -33,6 +33,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
 
           <div className="flex items-center gap-3">
+            {session.adminPermission === "READ_ONLY" && (
+              <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/50 border border-white/15 hidden sm:block">
+                View Only
+              </span>
+            )}
             <span className="text-white/50 text-sm hidden md:block">
               Welcome, <span className="text-amber-200">{session.name}</span>
             </span>

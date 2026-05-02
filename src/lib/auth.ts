@@ -15,6 +15,16 @@ export async function requireAdmin() {
   return session;
 }
 
+export async function requireAdminWrite() {
+  const session = await getSession();
+  if (!session) redirect("/login");
+  if (session.role !== "ADMIN") redirect("/judge");
+  if (session.adminPermission === "READ_ONLY") {
+    throw new Error("Read-only admins cannot perform write operations.");
+  }
+  return session;
+}
+
 export async function requireJudge() {
   const session = await getSession();
   if (!session) redirect("/login");
