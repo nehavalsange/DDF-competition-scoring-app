@@ -103,8 +103,8 @@ export default async function AdminDashboard() {
         </div>
       )}
 
-      {/* Admin Access section — only visible to read-write admins */}
-      {!isReadOnly && (
+      {/* Admin Access section — only visible to primary admin (no adminPermission set) */}
+      {session.adminPermission === null && (
         <AdminAccessSection
           admins={adminUsers.map((a) => ({
             ...a,

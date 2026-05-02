@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { TeamCategory } from "@/types";
 import { TeamCategory as PrismaTeamCategory, PerformanceType as PrismaPerformanceType, AdminPermission } from "@/generated/prisma";
-import { requireAdminWrite } from "@/lib/auth";
+import { requireAdminWrite, requirePrimaryAdmin } from "@/lib/auth";
 
 export async function createCompetition(
   _prev: { error?: string; success?: boolean } | null,
@@ -252,7 +252,7 @@ export async function createTestAdmin(
   password: string,
   permission: AdminPermission
 ) {
-  await requireAdminWrite();
+  await requirePrimaryAdmin();
   if (!name.trim() || !username.trim() || !password) return { error: "All fields are required." };
   if (password.length < 6) return { error: "Password must be at least 6 characters." };
   const existing = await db.user.findUnique({ where: { username } });
@@ -266,7 +266,7 @@ export async function createTestAdmin(
 }
 
 export async function deleteTestAdmin(userId: string) {
-  await requireAdminWrite();
+  await requirePrimaryAdmin();
   await db.user.delete({ where: { id: userId } });
   revalidatePath("/admin");
   return { success: true };

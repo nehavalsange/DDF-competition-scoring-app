@@ -25,6 +25,16 @@ export async function requireAdminWrite() {
   return session;
 }
 
+export async function requirePrimaryAdmin() {
+  const session = await getSession();
+  if (!session) redirect("/login");
+  if (session.role !== "ADMIN") redirect("/judge");
+  if (session.adminPermission !== null && session.adminPermission !== undefined) {
+    throw new Error("Only the primary admin can manage admin accounts.");
+  }
+  return session;
+}
+
 export async function requireJudge() {
   const session = await getSession();
   if (!session) redirect("/login");
