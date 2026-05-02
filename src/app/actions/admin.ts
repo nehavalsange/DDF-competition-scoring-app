@@ -246,27 +246,23 @@ export async function deleteJudgeAccount(userId: string, competitionId: string) 
   return { success: true };
 }
 
-const TEST_ADMINS = [
-  { name: "Viewer One",  username: "viewer1",   password: "View@MANCH26#1",  permission: "READ_ONLY"  as AdminPermission },
-  { name: "Viewer Two",  username: "viewer2",   password: "View@MANCH26#2",  permission: "READ_ONLY"  as AdminPermission },
-  { name: "Staff One",   username: "staffone",  password: "Staff@MANCH26#1", permission: "READ_WRITE" as AdminPermission },
-  { name: "Staff Two",   username: "stafftwo",  password: "Staff@MANCH26#2", permission: "READ_WRITE" as AdminPermission },
-];
-
-export async function createTestAdmins() {
+export async function createTestAdmin(
+  name: string,
+  username: string,
+  password: string,
+  permission: AdminPermission
+) {
   await requireAdminWrite();
-  const created: { name: string; username: string; password: string; permission: string }[] = [];
-  for (const t of TEST_ADMINS) {
-    const exists = await db.user.findUnique({ where: { username: t.username } });
-    if (exists) continue;
-    const passwordHash = await bcrypt.hash(t.password, 12);
-    await db.user.create({
-      data: { name: t.name, username: t.username, passwordHash, role: "ADMIN", adminPermission: t.permission },
-    });
-    created.push({ name: t.name, username: t.username, password: t.password, permission: t.permission });
-  }
+  if (!name.trim() || !username.trim() || !password) return { error: "All fields are required." };
+  if (password.length < 6) return { error: "Password must be at least 6 characters." };
+  const existing = await db.user.findUnique({ where: { username } });
+  if (existing) return { error: "Username already taken." };
+  const passwordHash = await bcrypt.hash(password, 12);
+  await db.user.create({
+    data: { name: name.trim(), username: username.trim(), passwordHash, role: "ADMIN", adminPermission: permission },
+  });
   revalidatePath("/admin");
-  return { created };
+  return { success: true };
 }
 
 export async function deleteTestAdmin(userId: string) {
