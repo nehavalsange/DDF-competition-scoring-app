@@ -166,6 +166,29 @@ export async function deleteCompetition(competitionId: string) {
   redirect("/admin");
 }
 
+export async function deleteCompetitionWithAuth(
+  competitionId: string,
+  username: string,
+  password: string
+) {
+  await requireAdmin();
+  const user = await db.user.findUnique({ where: { username } });
+  if (!user || user.role !== "ADMIN") return { error: "Invalid credentials." };
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) return { error: "Invalid credentials." };
+
+  const teams = await db.team.findMany({ where: { competitionId }, select: { id: true } });
+  const teamIds = teams.map((t) => t.id);
+  await db.score.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.teamScoringProgress.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.scoreSubmission.deleteMany({ where: { competitionId } });
+  await db.judgeAssignment.deleteMany({ where: { competitionId } });
+  await db.team.deleteMany({ where: { competitionId } });
+  await db.competition.delete({ where: { id: competitionId } });
+  revalidatePath("/admin");
+  redirect("/admin");
+}
+
 export async function resetCompetitionScores(competitionId: string) {
   await requireAdmin();
   const teams = await db.team.findMany({ where: { competitionId }, select: { id: true } });
@@ -174,6 +197,26 @@ export async function resetCompetitionScores(competitionId: string) {
   await db.teamScoringProgress.deleteMany({ where: { teamId: { in: teamIds } } });
   await db.scoreSubmission.deleteMany({ where: { competitionId } });
   revalidatePath(`/admin/competitions/${competitionId}`);
+}
+
+export async function resetCompetitionScoresWithAuth(
+  competitionId: string,
+  username: string,
+  password: string
+) {
+  await requireAdmin();
+  const user = await db.user.findUnique({ where: { username } });
+  if (!user || user.role !== "ADMIN") return { error: "Invalid credentials." };
+  const valid = await bcrypt.compare(password, user.passwordHash);
+  if (!valid) return { error: "Invalid credentials." };
+
+  const teams = await db.team.findMany({ where: { competitionId }, select: { id: true } });
+  const teamIds = teams.map((t) => t.id);
+  await db.score.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.teamScoringProgress.deleteMany({ where: { teamId: { in: teamIds } } });
+  await db.scoreSubmission.deleteMany({ where: { competitionId } });
+  revalidatePath(`/admin/competitions/${competitionId}`);
+  return { success: true };
 }
 
 export async function createAdminUser(name: string, username: string, password: string) {
